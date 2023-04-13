@@ -108,6 +108,7 @@ ipython_config.py
 
 
 
+
 # pdm
 #   Similar to Pipfile.lock, it is generally recommended to include pdm.lock in version control.
 #pdm.lock
@@ -138,7 +139,8 @@ venv.bak/
 # Spyder project settings
 .spyderproject
 .spyproject
-
+.gitignore
+.idea
 # Rope project settings
 .ropeproject
 
