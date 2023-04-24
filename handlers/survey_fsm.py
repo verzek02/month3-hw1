@@ -60,6 +60,7 @@ async def process_gender(message: types.Message, state: FSMContext):
            types.InlineKeyboardButton('Front-end', callback_data='front'))
     await message.answer("Какое у вас направление?")
 
+
 async def process_stack(callback: types.CallbackQuery, state: FSMContext):
     if callback.data == 'back':
         async with state.proxy() as data:
