@@ -4,7 +4,7 @@ from config import dp
 from handlers.info import info, echo
 from handlers.start import start
 from handlers.shop import show_categories, show_suveniry
-from handlers.survey_fsm import start_survey, process_age, Survey, process_gender,process_name,process_stack
+from handlers.survey_fsm import start_survey, process_age, Survey, process_gender,process_name,process_stack,stack_two
 import logging
 
 if __name__ == "__main__":
@@ -22,7 +22,9 @@ if __name__ == "__main__":
     dp.register_message_handler(process_age, state=Survey.age)
     dp.register_message_handler(process_name, state=Survey.name)
     dp.register_message_handler(process_gender, state=Survey.gender)
-    dp.register_message_handler(process_stack, state=Survey.stack)
+    dp.register_callback_query_handler(process_stack, lambda call: call.data, state=Survey.stack)
+    dp.register_callback_query_handler(stack_two, lambda call: call.data, state=Survey.stack)
+
     # dp.register_message_handler(process_time, state=Survey.time)
 
     dp.register_message_handler(echo)

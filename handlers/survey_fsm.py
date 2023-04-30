@@ -3,7 +3,6 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram import types
 
 
-
 # Finite State Machine
 class Survey(StatesGroup):
     name = State()
@@ -55,24 +54,60 @@ async def process_gender(message: types.Message, state: FSMContext):
 
     await Survey.next()
 
-    kb = types.InlineKeyboardMarkup
+    kb = types.InlineKeyboardMarkup()
     kb.add(types.InlineKeyboardButton('Back-end', callback_data='back'),
            types.InlineKeyboardButton('Front-end', callback_data='front'))
-    await message.answer("Какое у вас направление?")
+    await message.answer("Какое у вас направление?", reply_markup=kb)
+
 
 async def process_stack(callback: types.CallbackQuery, state: FSMContext):
     if callback.data == 'back':
         async with state.proxy() as data:
             data['stack'] = 'back'
+        await callback.message.answer('Круто!')
 
-        kb = types.InlineKeyboardMarkup
-        kb.add(types.InlineKeyboardButton('python', callback_data='py'),
-               types.InlineKeyboardButton('PHP', callback_data='php'),
-               types.InlineKeyboardButton('Java', callback_data='java'),
+        kb = types.InlineKeyboardMarkup(row_width=2)
+        kb.add(types.InlineKeyboardButton('Python', callback_data='py'),
+               types.InlineKeyboardButton('PHP', callback_data='php')),
+        kb.add(types.InlineKeyboardButton('Java', callback_data='java'),
                types.InlineKeyboardButton('C#', callback_data='c'))
+        await callback.message.answer('Какими языками владеете?', reply_markup=kb)
+        if callback.data == "py" or "php" or "java" or "c":
+            await callback.message.answer("Базар жок!")
 
 
+async def stack_two(callback: types.CallbackQuery, state: FSMContext):
+    await callback.message.answer("Базар жок!")
+    kb = types.InlineKeyboardMarkup(row_width=2)
+    kb.add(types.InlineKeyboardButton('Python', callback_data='py'),
+           types.InlineKeyboardButton('PHP', callback_data='php')),
+    await callback.message.answer('Какими языками владеете?', reply_markup=kb)
 
+
+# elif callback.data == 'front':
+#     kb = types.InlineKeyboardMarkup(row_width=2)
+#     kb.add(types.InlineKeyboardButton('tas', callback_data='tas'),
+#             types.InlineKeyboardButton('js', callback_data='js')),
+#     if callback.data == "tas":
+#         await callback.message.answer("lol")
+#     elif callback.data == "js":
+#         await callback.message.answer("loh")
+# аб
+# #     """Это обротчик для кнопки фронт"""
+# if callback.data == 'front':
+#
+#
+
+#     else:
+#         await callback.message.answer("ЛОХ!!")
+
+
+# await callback.message.answer('gg')
+
+
+# async def stack_two(callback: types.CallbackQuery, state: FSMContext):
+#     if callback.data == "py" or "php" or "java" or "c":
+#         await callback.message.answer("Базар жок!")
 
 
 async def process_time(message: types.Message, state: FSMContext):
