@@ -13,3 +13,10 @@ multidict==6.0.4
 python-dotenv==1.0.0
 pytz==2023.3
 yarl==1.8.2
+
+pip~=21.3.1
+wheel~=0.37.1
+tzlocal~=4.3
+setuptools~=60.2.0
+six~=1.16.0
+APScheduler~=3.10.1

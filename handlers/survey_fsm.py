@@ -1,6 +1,7 @@
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram import types
+from database.base import insert_survey
 
 
 # Finite State Machine
@@ -62,64 +63,63 @@ async def process_gender(message: types.Message, state: FSMContext):
 
 async def process_stack(callback: types.CallbackQuery, state: FSMContext):
     if callback.data == 'back':
+        """Это обработчик для кнопки back"""
+
         async with state.proxy() as data:
             data['stack'] = 'back'
-        await callback.message.answer('Круто!')
+            await callback.message.answer('Круто!')
 
-        kb = types.InlineKeyboardMarkup(row_width=2)
-        kb.add(types.InlineKeyboardButton('Python', callback_data='py'),
-               types.InlineKeyboardButton('PHP', callback_data='php')),
-        kb.add(types.InlineKeyboardButton('Java', callback_data='java'),
-               types.InlineKeyboardButton('C#', callback_data='c'))
+            kb = types.InlineKeyboardMarkup(row_width=2)
+            kb.add(types.InlineKeyboardButton('Python', callback_data='py'),
+                   types.InlineKeyboardButton('PHP', callback_data='php')),
+            kb.add(types.InlineKeyboardButton('Java', callback_data='java'),
+                   types.InlineKeyboardButton('C#', callback_data='c'))
+        await Survey.next()
         await callback.message.answer('Какими языками владеете?', reply_markup=kb)
-        if callback.data == "py" or "php" or "java" or "c":
-            await callback.message.answer("Базар жок!")
-
-
-async def stack_two(callback: types.CallbackQuery, state: FSMContext):
-    await callback.message.answer("Базар жок!")
-    kb = types.InlineKeyboardMarkup(row_width=2)
-    kb.add(types.InlineKeyboardButton('Python', callback_data='py'),
-           types.InlineKeyboardButton('PHP', callback_data='php')),
-    await callback.message.answer('Какими языками владеете?', reply_markup=kb)
-
-
-# elif callback.data == 'front':
-#     kb = types.InlineKeyboardMarkup(row_width=2)
-#     kb.add(types.InlineKeyboardButton('tas', callback_data='tas'),
-#             types.InlineKeyboardButton('js', callback_data='js')),
-#     if callback.data == "tas":
-#         await callback.message.answer("lol")
-#     elif callback.data == "js":
-#         await callback.message.answer("loh")
-# аб
-# #     """Это обротчик для кнопки фронт"""
-# if callback.data == 'front':
-#
-#
-
-#     else:
-#         await callback.message.answer("ЛОХ!!")
-
-
-# await callback.message.answer('gg')
-
-
-# async def stack_two(callback: types.CallbackQuery, state: FSMContext):
-#     if callback.data == "py" or "php" or "java" or "c":
-#         await callback.message.answer("Базар жок!")
-
-
-async def process_time(message: types.Message, state: FSMContext):
-    time = message.text
-    if not time.isdigit():
-        await message.answer("Введите только цифры!")
-    elif float(time) < 1:
-        await message.answer("Если вы работали меньше года то можете написать так: 0.5 и т.д")
-
-    else:
+    elif callback.data == 'front':
+        """Это обработчик для кнопки фронт"""
         async with state.proxy() as data:
-            data['time'] = int(time)
-            print(data)
-        await message.answer("Спасибо! За участие в нашем опросе.")
-        await state.finish()
+            data['stack'] = 'front'
+            await callback.message.answer("норм.")
+            kb = types.InlineKeyboardMarkup()
+            kb.add(types.InlineKeyboardButton('JavaScript', callback_data='js'),
+                   types.InlineKeyboardButton('TypeScript', callback_data='ts')),
+        await Survey.next()
+        await callback.message.answer('Какими языками владеете?', reply_markup=kb)
+
+
+async def process_languages(callback: types.CallbackQuery, state: FSMContext):
+    async with state.proxy() as data:
+        data['languages'] = callback.data
+        if callback.data == 'py' or callback.data == 'php' or callback.data == 'java' or callback.data == 'c':
+            await callback.message.answer("Базар жок!")
+        elif callback.data == 'js' or callback.data == 'ts':
+            await callback.message.answer('u stupid')
+        else:
+            await callback.message.answer('u stupid')
+
+    await Survey.next()
+    await callback.message.answer('Сколько вы работаете в этой сфере?')
+    await callback.message.answer("Если вы работали меньше года то можете написать так: 0.5 и т.д")
+
+
+async def process_experience(message: types.Message, state: FSMContext):
+    time = message.text
+
+    try:
+        time_float = float(time)
+    except ValueError:
+        await message.answer("Введите только цифры!")
+    else:
+        if time_float > 15:
+            await message.answer('Алдаба!')
+        else:
+            async with state.proxy() as data:
+                data['time'] = time_float
+                print(data)
+                insert_survey(data)
+
+            await message.answer("Спасибо! За участие в нашем опросе.")
+            await state.finish()
+
+

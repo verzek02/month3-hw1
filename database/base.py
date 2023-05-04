@@ -23,7 +23,9 @@ def create_tables():
         name TEXT,
         age INTEGER,
         gender TEXT,
-        user_id INTEGER
+        stack TEXT,
+        languages TEXT,
+        time FLOAT
     )""")
     cursor.execute("""CREATE TABLE IF NOT EXISTS products(
         product_id INTEGER PRIMARY KEY,
@@ -52,26 +54,23 @@ def get_products():
     return data.fetchall()
 
 
-def insert_survey(data, gender, user_id):
-    # cursor.execute("""
-    # INSERT INTO survey(name, age, gender, user_id)
-    #     VALUES ("Daniel", 19, "male", 12312),
-    #     ("Igor", 30, "male", 232323)
-    # """)
+def insert_survey(data):
+    init_db()
     cursor.execute("""
-    INSERT INTO survey(name, age, gender, user_id)
-        VALUES (:name, :age, :gender, :user_id),
+    INSERT INTO survey(name, age, gender, stack, languages, time)
+        VALUES (:name, :age, :gender, :stack, :languages, :time)
 
     """, {
-        'name': data.get('name'),
-        'age': data.get('age'),
-        'gender': gender,
-        'user_id': user_id
+        'name': data['name'],
+        'age': data['age'],
+        'gender': data['gender'],
+        'stack': data['stack'],
+        'languages': data['languages'],
+        'time': data['time'],
     })
     db.commit()
 
-# if __name__ == "__main__":
+if __name__ == "__main__":
 #     print(init_db.__doc__)
-#     init_db()
-#     create_tables()
-#     insert_survey()
+    init_db()
+    create_tables()
