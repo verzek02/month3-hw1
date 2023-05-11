@@ -14,6 +14,9 @@ from handlers.survey_fsm import (
     process_languages,
     process_experience
     )
+from bot_admin.ban import yes_no
+from bot_admin.bad_words import filter_messages
+
 from scheduler.reminder import start_reminder
 import logging
 from database.base import (
@@ -53,6 +56,8 @@ if __name__ == "__main__":
     dp.register_message_handler(start_reminder, Text(startswith='напомни'))
     dp.register_message_handler(process_experience, state=Survey.experience)
     dp.register_message_handler(show_cars, commands=['cars'])
+    dp.register_message_handler(yes_no, commands=['забанить'], commands_prefix=['!'])
+    dp.register_message_handler(filter_messages)
 
     dp.register_message_handler(echo)
     scheduler.start()
