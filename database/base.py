@@ -43,15 +43,16 @@ def delete_products():
 
 def insert_products():
     cursor.execute("""INSERT INTO products(name, price, photo)
-        VALUES ('Самая лучшая книга', 200, 'images/cat.webp'),
-        ('Самая интересная книга', 400, 'images/cat.webp')
+        VALUES ('Самые лучшие часы', 200, 'images/самые лучшие часы.jpeg'),
+        ('Самые дорогие часы', 400, 'images/самые дорогие часы.jpg')
     """)
     db.commit()
 
 
 def get_products():
-    data = cursor.execute("""SELECT * FROM products""")
-    return data.fetchall()
+    init_db()
+    cursor.execute("""SELECT * FROM products""")
+    return cursor.fetchall()
 
 
 def insert_survey(data):
@@ -71,6 +72,6 @@ def insert_survey(data):
     db.commit()
 
 if __name__ == "__main__":
-#     print(init_db.__doc__)
     init_db()
     create_tables()
+    insert_products()

@@ -13,7 +13,7 @@ async def start_reminder(message: types.Message):
     scheduler.add_job(
         send_reminder,
         'date',
-    run_date=datetime(year=2023, month=5, day=1, hour=17, minute=45),
+    run_date=datetime(year=2023, month=5, day=10, hour=20, minute=17),
     args=(message.from_user.id,)
     )
 
