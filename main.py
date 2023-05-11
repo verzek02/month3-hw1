@@ -36,7 +36,7 @@ if __name__ == "__main__":
     dp.register_callback_query_handler(process_stack,  state=Survey.stack)
     # dp.register_callback_query_handler(process_languages, lambda c: c.data == 'py', state=Survey.language)
     dp.register_callback_query_handler(process_languages, state=Survey.language)
-    dp.register_message_handler(start_reminder, commands=['rem'])
+    dp.register_message_handler(start_reminder, Text(startswith='напомни'))
     dp.register_message_handler(process_experience, state=Survey.experience)
 
     dp.register_message_handler(echo)
