@@ -71,7 +71,46 @@ def insert_survey(data):
     })
     db.commit()
 
+
+def create_table_cars():
+    init_db()
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS dictionary (
+        product_id INTEGER PRIMARY KEY,
+        name TEXT,
+        price TEXT,
+        description TEXT,
+        link TEXT UNIQUE
+    )
+    """)
+    db.commit()
+
+
+# Вставка данных
+def pop_cars(data1):
+    init_db()
+    for item in data1:
+        cursor.execute("""
+        INSERT OR IGNORE INTO dictionary (name, price, description, link)
+        VALUES (?, ?, ?, ?)
+        """, (item["name"], item["price"], item["descr"], item["link"]))
+
+    db.commit()
+
+
+def get_data():
+    init_db()
+    cursor.execute(
+        '''
+        SELECT * FROM dictionary
+        '''
+    )
+    return cursor.fetchall()
+
 if __name__ == "__main__":
     init_db()
     create_tables()
-    insert_products()
+    # insert_products()
+    create_table_cars()
+
+

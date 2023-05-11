@@ -16,6 +16,20 @@ from handlers.survey_fsm import (
     )
 from scheduler.reminder import start_reminder
 import logging
+from database.base import (
+create_table_cars,
+init_db
+
+)
+
+from parsing.mashina import get_cars
+from parsing.answers_cars import show_cars
+
+
+async def startup(_):
+    init_db()
+    create_table_cars()
+    get_cars()
 
 
 if __name__ == "__main__":
@@ -38,7 +52,8 @@ if __name__ == "__main__":
     dp.register_callback_query_handler(process_languages, state=Survey.language)
     dp.register_message_handler(start_reminder, Text(startswith='напомни'))
     dp.register_message_handler(process_experience, state=Survey.experience)
+    dp.register_message_handler(show_cars, commands=['cars'])
 
     dp.register_message_handler(echo)
     scheduler.start()
-    executor.start_polling(dp)
+    executor.start_polling(dp, on_startup=startup)
